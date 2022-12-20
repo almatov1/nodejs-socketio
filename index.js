@@ -3,15 +3,14 @@ const io = require('socket.io')(server)
 var messages = [];
 
 io.on("connection", (socket) => {
+    console.log(socket.id);
     socket.emit('messages_list', messages);
 
     socket.on('message', function name(data) {
         messages.push(data);
-        console.log(messages);
+        io.sockets.emit('messages_list', messages);
     })
 });
-
-
 
 var server_port = process.env.PORT || 3000;
 server.listen(server_port, function (err) {

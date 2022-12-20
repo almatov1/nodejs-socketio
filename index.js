@@ -3,7 +3,13 @@ const io = require('socket.io')(server)
 var messages = [];
 
 io.on("connection", (socket) => {
+    if(socket.handshake.query['platformToken'] != 'r43xv43vi') {
+        console.log(`${socket.id} disconnected`);
+        socket.disconnect();
+    }
+
     console.log(socket.id);
+    console.log(socket.handshake.query['platformToken']);
     socket.emit('messages_list', messages);
 
     socket.on('message', function name(data) {

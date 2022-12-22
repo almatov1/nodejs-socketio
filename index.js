@@ -1,5 +1,7 @@
 const server = require('http').createServer()
-const io = require('socket.io')(server,  { cors: { origin: '*', methods: ["GET", "POST"]} })
+const io = require('socket.io')(server, {
+    allowEIO3: true
+  })
 var users = [];
 
 function removeUser(id) {

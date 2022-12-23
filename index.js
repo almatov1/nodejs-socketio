@@ -1,7 +1,5 @@
 const server = require('http').createServer()
-const io = require('socket.io')(server, {
-    allowEIO3: true
-  })
+const io = require('socket.io')(server)
 var users = [];
 
 function removeUser(id) {
@@ -48,6 +46,10 @@ io.on("connection", (socket) => {
         console.log(users);
 
         io.sockets.emit("usersList", users);
+    });
+    
+    socket.on("commandFromClient", (command) => {
+        console.log(command);
     });
 
 });

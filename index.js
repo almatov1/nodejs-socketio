@@ -35,7 +35,7 @@ io.on("connection", (socket) => {
 
     socket.emit("connectResult", true);
     console.log(`${socket.id} connected`);
-    users.push({ 'id': socket.id, 'name': socket.handshake.query['userName'] });
+    users.push({ 'id': socket.id, 'name': socket.handshake.query['userName'], 'x': 0, 'y': 0});
     console.log(users);
 
     io.sockets.emit("usersList", users);
@@ -44,12 +44,18 @@ io.on("connection", (socket) => {
         console.log(`${socket.id} disconnected, reason: ${reason}`);
         removeUser(socket.id);
         console.log(users);
-
-        io.sockets.emit("usersList", users);
+        
+        socket.broadcast.emit("usersList", users);
+        socket.broadcast.emit('userDisconnected', socket.id);
     });
     
-    socket.on("commandFromClient", (command) => {
-        console.log(command);
+    socket.on("updatePosition", (x, y) => {
+        var index = users.findIndex(x => x.id === socket.id);
+        users[index]['x'] = x;
+        users[index]['y'] = y;
+
+        console.log(users);
+        io.sockets.emit("usersList", users);
     });
 
 });
